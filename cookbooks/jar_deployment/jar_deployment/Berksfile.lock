@@ -1,0 +1,9 @@
+DEPENDENCIES
+  jar_deployment
+    path: .
+    metadata: true
+
+GRAPH
+  jar_deployment (0.2.0)
+    java (~> 1.29)
+  java (1.35.0)
