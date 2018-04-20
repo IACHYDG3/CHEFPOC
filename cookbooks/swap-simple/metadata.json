@@ -1,0 +1,41 @@
+{
+  "name": "swap-simple",
+  "description": "Chef recipe to add swap to your VM",
+  "long_description": "",
+  "maintainer": "iachydg3",
+  "maintainer_email": "iachydg3@gmail.com",
+  "license": "All rights reserved",
+  "platforms": {
+
+  },
+  "dependencies": {
+
+  },
+  "recommendations": {
+
+  },
+  "suggestions": {
+
+  },
+  "conflicting": {
+
+  },
+  "providing": {
+
+  },
+  "replacing": {
+
+  },
+  "attributes": {
+
+  },
+  "groupings": {
+
+  },
+  "recipes": {
+
+  },
+  "version": "0.1.0",
+  "source_url": "",
+  "issues_url": ""
+}

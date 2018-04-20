@@ -1,0 +1,53 @@
+{
+  "name": "simple_users",
+  "description": "Manages Linux (Ubuntu/CentOS) local users",
+  "long_description": "Manages local user accounts including adding and removing them from sudoers. Usernames and other details are defined in attributes.",
+  "maintainer": "Greg Konradt",
+  "maintainer_email": "grifkon+github@gmail.com",
+  "license": "Apache v2.0",
+  "platforms": {
+    "ubuntu": ">= 0.0.0",
+    "centos": ">= 0.0.0",
+    "redhat": ">= 0.0.0"
+  },
+  "dependencies": {
+
+  },
+  "recommendations": {
+
+  },
+  "suggestions": {
+
+  },
+  "conflicting": {
+
+  },
+  "providing": {
+
+  },
+  "replacing": {
+
+  },
+  "attributes": {
+
+  },
+  "groupings": {
+
+  },
+  "recipes": {
+
+  },
+  "version": "0.1.7",
+  "source_url": "https://github.com/grifonas/simple_users",
+  "issues_url": "https://github.com/grifonas/simple_users/issues",
+  "privacy": false,
+  "chef_versions": [
+
+  ],
+  "ohai_versions": [
+
+  ],
+  "gems": [
+
+  ]
+}

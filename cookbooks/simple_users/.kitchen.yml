@@ -1,0 +1,44 @@
+driver:
+  name: ec2
+  aws_ssh_key_id: AWS-Default
+  security_group_ids: ["sg-28c43247"]
+  region: eu-west-1
+  require_chef_omnibus: true
+  subnet_id: subnet-35a1565f
+  associate_public_ip: true
+  instance_type: t2.micro
+#  interface: private
+  shared_credentials_profile: <%= ENV['AWS_PROFILE'] %>
+#  aws_access_key_id: <%= ENV['AWS_ACCESS_KEY_ID_QA'] %>
+#  aws_secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY_QA'] %>
+
+transport:
+  ssh_key: /Users/grifonas/keys/AWS-Default.pem
+  #username: ubuntu
+  #username: centos
+  username: ec2-user
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: amazon
+    driver:
+      #Ubuntu:
+      #image_id: ami-6f587e1c
+      # Centos:
+      #image_id: ami-7abd0209
+      # Amazon Linux:
+      #image_id: ami-c51e3eb6
+      # Redhat:
+      image_id: ami-02ace471
+      tags:
+        Name: Users-ChefKitchen-Tests
+        CycleStatus: Tests
+        created-by: test-kitchen
+      
+suites:
+  - name: default
+    run_list:
+      - recipe[simple_users::default]
+    attributes:

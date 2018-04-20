@@ -1,0 +1,12 @@
+name             'auto-update'
+maintainer       'Sandor Acs, Mark Gergely'
+maintainer_email 'acs.sandor@sztaki.mta.hu, gergely.mark@sztaki.mta.hu'
+license          'Apache 2.0'
+description      'auto-update and upgrade on debian and rhel family'
+long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
+version          '0.3.0'
+supports         'ubuntu',           '>= 12.04'
+supports         'debian',           '>= 6.0'
+supports         'scientificlinux',  '>= 5.0'
+supports         'centos',           '>= 5.0'
+depends          'apt',              '>= 2.4.0'
