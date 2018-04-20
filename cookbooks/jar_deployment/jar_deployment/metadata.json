@@ -1,0 +1,41 @@
+{
+  "name": "jar_deployment",
+  "description": "Installs/Configures jar_deployment",
+  "long_description": "# Description\n\nInstalls/Configures jar_deployment\n\n# Requirements\n\n## Platform:\n\n* Centos (>= 6.6)\n\n## Cookbooks:\n\n* java (~> 1.29)\n\n# Attributes\n\n* `node['java']['install_flavor']` - Java family to install. Defaults to `openjdk`.\n* `node['java']['jdk_version']` - Java version to install. Defaults to `8`.\n* `node['java']['openjdk']['accept_oracle_download_terms']` - Accept oracle download terms/conditions. Defaults to `true`.\n\n# Recipes\n\n* jar_deployment::default\n\n# Resources\n\n* [jar_deployment](#jar_deployment) - This resource facilitates jar deployment.\n\n## jar_deployment\n\nThis resource facilitates jar deployment.\n\n### Actions\n\n- deploy: Deploys jar. Default action.\n- delete: Deletes deployed jar.\n\n### Attribute Parameters\n\n- deploy_directory: directory to deploy the jar Defaults to <code>\"/opt/application\"</code>.\n- log_directory: directory to deploy the jar Defaults to <code>\"/var/log\"</code>.\n- jar_location: location of the jar to deploy\n- jar_checksum: checksum of jar to deploy\n- jar_args:  Defaults to <code>{\"--server-port\"=>8080}</code>.\n- jar_user: user to deploy and run jar with Defaults to <code>\"root\"</code>.\n\n### Examples\n\n    # An example of deploying a service\n    jar_deployment 'service_name' do\n      deploy_directory '/opt/application'\n      jar_location 'http://example.com/repo/jar/application.jar'\n      jar_checksum '45hj35jk34h53j4h5k'\n      jar_args {\n\t\t    '--server-port': 8080\n      }\n      jar_user 'root'\n      action :deploy\n    end\n\n    # An example of deleting a deployed service\n    jar_deployment 'service_name' do\n      action :delete\n    end\n\n# License and Maintainer\n\nMaintainer:: robertnorthard (<robertnorthard@googlemail.com>)\n\nLicense:: All rights reserved\n",
+  "maintainer": "robertnorthard",
+  "maintainer_email": "robertnorthard@googlemail.com",
+  "license": "All rights reserved",
+  "platforms": {
+    "centos": ">= 6.6"
+  },
+  "dependencies": {
+    "java": "~> 1.29"
+  },
+  "recommendations": {
+
+  },
+  "suggestions": {
+
+  },
+  "conflicting": {
+
+  },
+  "providing": {
+
+  },
+  "replacing": {
+
+  },
+  "attributes": {
+
+  },
+  "groupings": {
+
+  },
+  "recipes": {
+
+  },
+  "version": "0.2.0",
+  "source_url": "https://github.com/RobertNorthard/cookbook-jar_deployment",
+  "issues_url": "https://github.com/RobertNorthard/cookbook-jar_deployment/issues"
+}
