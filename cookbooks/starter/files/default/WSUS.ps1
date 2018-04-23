@@ -103,7 +103,7 @@ catch
 	}
 }
 
-$RootCategoriesString="Critical Updates,Security Updates,Update Rollups"
+$RootCategoriesString="Critical Updates,Security Updates,Update Rollups,Updates"
 [String[]]$RootCategories=$RootCategoriesString.Split(',')
 $SeverityString="Critical,Important,Moderate"
 [String[]]$Severity=$SeverityString.Split(',')
