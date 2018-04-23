@@ -16,7 +16,7 @@ $objSearcher = $updateSession.CreateUpdateSearcher()
 
 "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "Start:Check whether WSUS service is registered on the server"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
 $IsUpdateServiceRegistered = $false
-$updateService="WSUS"
+$updateService="Windows Update"
 $updateServiceName=""
  $ServiceID="3da21691-e39d-4da6-8a4b-b43877bcb1b7"
  $ServerSelection=3
