@@ -1,4 +1,4 @@
-tartDate = Get-Date -format "yyyy-MM-dd"
+$startDate = Get-Date -format "yyyy-MM-dd"
 $startTimeonly=Get-Date -format "HH:mm:ss:fff"
 $updateSession = new-object -com "Microsoft.Update.Session" 
 "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "End:Create update session object"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
