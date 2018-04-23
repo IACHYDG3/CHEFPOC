@@ -86,7 +86,7 @@ try
     $startSearchDate=Get-Date
     $objResults=$objSearcher.Search($criteria);
     $endSearchDate=Get-Date
-    $searchTime=NEW-TIMESPAN –Start $startSearchDate –End $endSearchDate
+    $searchTime=NEW-TIMESPAN -Start $startSearchDate -End $endSearchDate
     $searchStatus=$true;
     }
 catch
@@ -204,7 +204,7 @@ if($objResults.Updates.Count -gt 0)
         $Result= $downloader.Download() 
         $downloadStatus=$true
         $endDownloadDate=Get-Date
-        $downloadTime=NEW-TIMESPAN –Start $startDownloadDate –End $endDownloadDate
+        $downloadTime=NEW-TIMESPAN -Start $startDownloadDate -End $endDownloadDate
         }
         catch
         {
@@ -212,7 +212,7 @@ if($objResults.Updates.Count -gt 0)
         }
         if($downloadStatus)
         {
-        if (($Result.Hresult -eq 0) –and (($result.resultCode –eq 2) -or ($result.resultCode –eq 3)) ) 
+        if (($Result.Hresult -eq 0) -and (($result.resultCode -eq 2) -or ($result.resultCode -eq 3)) ) 
         { 
         
             $updatesToInstall = New-object -com "Microsoft.Update.UpdateColl" 
@@ -234,7 +234,8 @@ if($objResults.Updates.Count -gt 0)
               $installationResult = $installer.Install()
               $installStatus=$true 
               $endInstallDate=Get-Date
-              $installTime=NEW-TIMESPAN –Start $startInstallDate –End $endInstallDate
+              $installTime=NEW-TIMESPAN -Start $startInstallDate 
+	      End $endInstallDate
               }
               catch
               {
