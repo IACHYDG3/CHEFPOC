@@ -3,7 +3,7 @@
 # For more information, see the documentation: https://docs.chef.io/essentials_cookbook_recipes.html
 powershell_script 'RunCode' do
   guard_interpreter :powershell_script
-  code "& \"C:/powershelltest/WSUS.ps1\""
+  code "& \"C:/powershelltest/test1.ps1\""
   not_if "$false"
 end
 
