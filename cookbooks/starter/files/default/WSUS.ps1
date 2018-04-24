@@ -1,20 +1,21 @@
 $startDate = Get-Date -format "yyyy-MM-dd"
 $startTimeonly=Get-Date -format "HH:mm:ss:fff"
-$updateSession = new-object -com "Microsoft.Update.Session" 
-"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "End:Create update session object"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+$updateSession = new-object -com "Microsoft.Update.Session"
+$logFilePath= "C:\EZ_Automation\EZPatch\Log_EZPatch_"+$startDate+"_"+$startTimeonly.Replace(':','')+".txt"
+"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "End:Create update session object"| out-file $logFilePath -Append
 
 $criteria = "IsInstalled=0 and DeploymentAction='Installation' or IsPresent=1 and DeploymentAction='Uninstallation' or IsInstalled=1 and DeploymentAction='Installation' and RebootRequired=1 or IsInstalled=0 and DeploymentAction='Uninstallation' and RebootRequired=1"
-"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "Search Criteria:$criteria"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "Search Criteria:$criteria"| out-file $logFilePath -Append
 
-"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "Start:Create update service manager object"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "Start:Create update service manager object"| out-file $logFilePath -Append
 $objServiceManager = New-Object -ComObject "Microsoft.Update.ServiceManager"
-"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "End:Create update service manager object"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "End:Create update service manager object"| out-file $logFilePath -Append
 
-"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "Start:Create update searcher object"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "Start:Create update searcher object"| out-file $logFilePath -Append
 $objSearcher = $updateSession.CreateUpdateSearcher()
-"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "End:Create update searcher object"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "End:Create update searcher object"| out-file $logFilePath -Append
 
-"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "Start:Check whether WSUS service is registered on the server"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "Start:Check whether WSUS service is registered on the server"| out-file $logFilePath -Append
 $IsUpdateServiceRegistered = $false
 $updateService="Windows Update"
 $updateServiceName=""
@@ -42,7 +43,7 @@ Foreach ($objsvc in $objServiceManager.Services)
 
 if(!$IsUpdateServiceRegistered)
 {
-     "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "Trying to register WSUS service on server"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+     "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "Trying to register WSUS service on server"| out-file $logFilePath -Append
     $authorizationCabPath=""
     try
     {
@@ -55,30 +56,30 @@ if(!$IsUpdateServiceRegistered)
     }
     catch
     {
-        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + $_ | out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + $_ | out-file $logFilePath -Append
     }
     if($IsUpdateServiceRegistered)
     {
-        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "WSUS service is registered on the server now, Registration Status:$IsUpdateServiceRegistered"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "WSUS service is registered on the server now, Registration Status:$IsUpdateServiceRegistered"| out-file $logFilePath -Append
     }
     else
     {
-        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "WSUS service registration failed on server"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "WSUS service registration failed on server"| out-file $logFilePath -Append
     }
    
 }
 else
 {
-"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "End:WSUS service is already registered on the server"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "End:WSUS service is already registered on the server"| out-file $logFilePath -Append
 }
 
 if($IsUpdateServiceRegistered -eq $false)
 {
-    "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "Patching Failed: due to service registration failure on the server, refer http://inetexplorer.mvps.org/archive/windows_update_codes.htm"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+    "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "Patching Failed: due to service registration failure on the server, refer http://inetexplorer.mvps.org/archive/windows_update_codes.htm"| out-file $logFilePath -Append
 }
 else
 {
-"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "Start:Searching for updates as per criteria"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "Start:Searching for updates as per criteria"| out-file $logFilePath -Append
 $searchStatus=$false
 
 try
@@ -91,14 +92,14 @@ try
     }
 catch
 {
-     "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + $_.Exception.Message | out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+     "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + $_.Exception.Message | out-file $logFilePath -Append
     If($_ -match "HRESULT: 0x80072EE2")
 	{
-        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "This server may not be able to connect to Windows Update server" | out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append		
+        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "This server may not be able to connect to Windows Update server" | out-file $logFilePath -Append		
 	}
     elseIf($_ -match "HRESULT: 0x8024402F")
 	{
-		"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "Internet may not be enabled on this server" | out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append		
+		"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "Internet may not be enabled on this server" | out-file $logFilePath -Append		
        
 	}
 }
@@ -114,7 +115,7 @@ $ExcludeKBString=""
 $NOSQLTitle=""
 if($searchStatus)
 {
-"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "End:Search, $($objResults.Updates.Count) updates found, search duration is $($searchTime.Hours)hours $($searchTime.Minutes)minutes $($searchTime.Seconds)seconds"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "End:Search, $($objResults.Updates.Count) updates found, search duration is $($searchTime.Hours)hours $($searchTime.Minutes)minutes $($searchTime.Seconds)seconds"| out-file $logFilePath -Append
 if($objResults.Updates.Count -gt 0)
 {
     $UpdateCollection = New-Object -ComObject Microsoft.Update.UpdateColl
@@ -174,9 +175,9 @@ if($objResults.Updates.Count -gt 0)
             }
             
         } 
-    "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Start:Create Downloader object"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+    "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Start:Create Downloader object"| out-file $logFilePath -Append
     $downloader = $updateSession.CreateUpdateDownloader() 
-    "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"End:Create Downloader object"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+    "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"End:Create Downloader object"| out-file $logFilePath -Append
      
      $downloader.Updates = $UpdateCollection
      
@@ -184,19 +185,19 @@ if($objResults.Updates.Count -gt 0)
     {
        if(($InstallKBString -ne "") -and ($InstallKBs.Count -gt 0))
        {
-        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Patching Completed: No updates found that match the specified KBs $InstallKBString through WSUS service"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Patching Completed: No updates found that match the specified KBs $InstallKBString through WSUS service"| out-file $logFilePath -Append
        }
        else
        {
-        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Patching Completed: No pending updates found in specified rootcategories:'$([string]::join(", ", $RootCategories))'"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Patching Completed: No pending updates found in specified rootcategories:'$([string]::join(", ", $RootCategories))'"| out-file $logFilePath -Append
        }
     }
     else
     {
-        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"$($downloader.Updates.Count) updates found in specified rootcategories:'$([string]::join(", ", $RootCategories))'"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"$($downloader.Updates.Count) updates found in specified rootcategories:'$([string]::join(", ", $RootCategories))'"| out-file $logFilePath -Append
         $resultcode= @{0="Not Started"; 1="In Progress"; 2="Succeeded"; 3="Succeeded With Errors"; 4="Failed" ; 5="Aborted" } 
          
-        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Start:Download"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Start:Download"| out-file $logFilePath -Append
         $downloadStatus=$false
         try
         {  
@@ -208,7 +209,7 @@ if($objResults.Updates.Count -gt 0)
         }
         catch
         {
-        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Download Failed with the error:"+ $_.Exception.Message| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Download Failed with the error:"+ $_.Exception.Message| out-file $logFilePath -Append
         }
         if($downloadStatus)
         {
@@ -218,15 +219,15 @@ if($objResults.Updates.Count -gt 0)
             $updatesToInstall = New-object -com "Microsoft.Update.UpdateColl" 
             $downloader.Updates | where {$_.isdownloaded} | foreach-Object {$updatesToInstall.Add($_) | out-null}  
                
-             "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"End:Downloaded with resultcode as $($resultcode[$result.resultCode]),$($updatesToInstall.Count) updates downloaded, download duration is $($downloadTime.Hours)hours $($downloadTime.Minutes)minutes $($downloadTime.Seconds)seconds"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+             "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"End:Downloaded with resultcode as $($resultcode[$result.resultCode]),$($updatesToInstall.Count) updates downloaded, download duration is $($downloadTime.Hours)hours $($downloadTime.Minutes)minutes $($downloadTime.Seconds)seconds"| out-file $logFilePath -Append
               
-             "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Start:Create update installer object"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append                                                                                                                                             
+             "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Start:Create update installer object"| out-file $logFilePath -Append                                                                                                                                             
              $installer = $updateSession.CreateUpdateInstaller()  
-             "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"End:Create update installer object"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append 
+             "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"End:Create update installer object"| out-file $logFilePath -Append 
                  
             $installer.Updates = $updatesToInstall 
                   
-            "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Start:Install"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append 
+            "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Start:Install"| out-file $logFilePath -Append 
               $installStatus=$false    
               try
               { 
@@ -239,18 +240,18 @@ if($objResults.Updates.Count -gt 0)
               }
               catch
               {
-              "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Install Failed with the error:"+ $_.Exception.Message| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+              "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Install Failed with the error:"+ $_.Exception.Message| out-file $logFilePath -Append
               }
               if($installStatus)
               {
-              "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"End:Install,Install duration is $($installTime.Hours)hours $($installTime.Minutes)minutes $($installTime.Seconds)seconds"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append 
+              "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"End:Install,Install duration is $($installTime.Hours)hours $($installTime.Minutes)minutes $($installTime.Seconds)seconds"| out-file $logFilePath -Append 
              $counter=-1 
              $IsRebootRequired=$false
              $rebootString="reboot not required"
              $failedUpdatesCount=0    
              $succeededUpdatesCount=0 
              $suceededWithErrorsCount=0
-             "<Start: Update History>"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+             "<Start: Update History>"| out-file $logFilePath -Append
              foreach($installedUpdate in $installer.updates)
              {
                 $counter++;
@@ -274,53 +275,53 @@ if($objResults.Updates.Count -gt 0)
                     5 {$failedUpdatesCount++; break} 
                 }
 
-                $strUpdateInfo|out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append               
+                $strUpdateInfo|out-file $logFilePath -Append               
              }
-             "<End: Update History>"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+             "<End: Update History>"| out-file $logFilePath -Append
 
              "
 [{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Total Updates:$($installer.updates.Count) Succeed:$succeededUpdatesCount  Failed:$failedUpdatesCount  Succeeded with errors:$suceededWithErrorsCount 
-"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+"| out-file $logFilePath -Append
 
              if($failedUpdatesCount -eq $installer.updates.Count)
              {
-                "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Patching Failed:Install Failed, refer http://inetexplorer.mvps.org/archive/windows_update_codes.htm"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+                "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Patching Failed:Install Failed, refer http://inetexplorer.mvps.org/archive/windows_update_codes.htm"| out-file $logFilePath -Append
              }
              elseif($suceededWithErrorsCount -or $failedUpdatesCount -gt 0)
              {
-                 "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Patching Completed with errors,$rebootString"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+                 "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Patching Completed with errors,$rebootString"| out-file $logFilePath -Append
              }
              else
              {
-                 "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Patching Completed sucessfully,$rebootString"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+                 "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Patching Completed sucessfully,$rebootString"| out-file $logFilePath -Append
              }
              }
              else
              {
-             "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Patching Failed:Install Failed,refer http://inetexplorer.mvps.org/archive/windows_update_codes.htm"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append    
+             "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Patching Failed:Install Failed,refer http://inetexplorer.mvps.org/archive/windows_update_codes.htm"| out-file $logFilePath -Append    
              }                      
            
         }
         else
         {
-        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Patching Failed:Download Failed with result code as $($resultcode[$result.resultcode]), refer http://inetexplorer.mvps.org/archive/windows_update_codes.htm"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append    
+        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Patching Failed:Download Failed with result code as $($resultcode[$result.resultcode]), refer http://inetexplorer.mvps.org/archive/windows_update_codes.htm"| out-file $logFilePath -Append    
         }
         }
         else
         {
-        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Patching Failed:Download Failed, refer http://inetexplorer.mvps.org/archive/windows_update_codes.htm"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append    
+        "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Patching Failed:Download Failed, refer http://inetexplorer.mvps.org/archive/windows_update_codes.htm"| out-file $logFilePath -Append    
         }
     }
 }
 else
 {
-"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Patching Completed: No pending updates returned as part of search operation"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) +"Patching Completed: No pending updates returned as part of search operation"| out-file $logFilePath -Append
 }
 }
 else
 {
-"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "End:Search, Failed to search for updates"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
-"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "Patching Failed: Search Failed with errors, refer http://inetexplorer.mvps.org/archive/windows_update_codes.htm"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
+"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "End:Search, Failed to search for updates"| out-file $logFilePath -Append
+"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) + "Patching Failed: Search Failed with errors, refer http://inetexplorer.mvps.org/archive/windows_update_codes.htm"| out-file $logFilePath -Append
 
 }
 
@@ -329,10 +330,10 @@ $searchString=$startDate+"	"+$startTimeonly
 $log = Get-Content $env:windir\windowsupdate.log | ConvertTo-Xml -NoTypeInformation 
 $result = $log.Objects.Object | where {$_ -gt $searchString}
 "
-##########################################   LOGS from WINDOWSUPDATE.Log file    #########################################"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
-$result | out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append 
+##########################################   LOGS from WINDOWSUPDATE.Log file    #########################################"| out-file $logFilePath -Append
+$result | out-file $logFilePath -Append 
 
-if ($IsRebootRequired)
+if($IsRebootRequired)
 {
-shutdown -r -t 0
+Shutdown -r -t 0
 }
