@@ -332,4 +332,7 @@ $result = $log.Objects.Object | where {$_ -gt $searchString}
 ##########################################   LOGS from WINDOWSUPDATE.Log file    #########################################"| out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append
 $result | out-file C:\EZ_Automation\EZPatch\Log_EZPatch.txt -Append 
 
-
+if ($IsRebootRequired)
+{
+shutdown -r -t 0
+}
